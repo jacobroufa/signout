@@ -1,0 +1,88 @@
+var ENTER_KEY = 13;
+
+(function($) {
+
+  //models
+  var Asset = Backbone.Model.extend({
+
+    defaults: {
+      id: "",
+      tag: "",
+      desc: "",
+      state: ""
+    },
+
+    initialize: function() {
+    }
+
+  });
+  
+  //collections
+
+  //doc ready for views and router
+  $(document).ready(function() {
+
+    //build views here
+    window.HomeView = Backbone.View.extend({
+      tagName: 'li',
+      className: 'home',
+      template: _.template($('#home-template').html()),
+
+      initialize: function() {
+        _.bindAll(this, 'render');
+        this.collection.bind('reset', this.render);
+      },
+
+      render: function() {
+        var $assets,
+        collection = this.collection;
+
+        $(this.el).html(this.template({}));
+        $assets = this.$(".albums");
+        this.collection.each(function(asset) {
+          var view = new HomeAssetView({
+            model: asset,
+            collection: collection
+          });
+          $assets.append(view.render().el);
+        });
+
+        return this;
+      }
+    });
+
+    //build router here
+    window.NewsroomSignout = Backbone.Router.extend({
+      routes: {
+        '': 'home',
+        'log/:lid': 'log',
+        'assets': 'assets'
+      },
+
+      initialize: function() {
+        // build init function
+      },
+
+      home: function() {
+        $('#container').empty();
+        $('#container').append(this.homeView.render().el);
+
+      log: function(lid) {
+        // build log page
+        $('#container').empty();
+        $('#container').append(this.logView.render().el);
+      },
+
+      assets: function() {
+        // build assets page
+        $('#container').empty();
+        $('#container').append(this.assetsView.render().el);
+      }
+    });
+
+    window.App = new NewsroomSignout();
+    Backbone.history.start({pushState: true, root: "/d/signout/"});
+
+  });
+
+})(jQuery);
