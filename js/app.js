@@ -41,6 +41,7 @@ App = (function($) {
   });
 
   var assets = new Assets();
+  assets.fetch();
   /* assets.fetch({
     success: function() {
       _.each(assets.models, function(asset){
@@ -89,18 +90,13 @@ App = (function($) {
 
       render: function() {
         console.log('rendering assets view list');
-        console.log(this.model);
-        this.model.fetch({
-          success: function() {
-            _.each(this.models, function(asset){
-              $(this.el).html(
-                this.template(asset.toJSON())
-              );
-              console.log(asset);
-            }, this);
-            return this;
-          }
-        });
+        _.each(this.models, function(asset){
+          $(this.el).html(
+            this.template(asset.toJSON())
+          );
+          console.log(asset);
+        }, this);
+        return this;
       },
     });
 
@@ -126,7 +122,7 @@ App = (function($) {
         $('#container').empty();
         $('#container').html(homeView.render());
         // print the asset list
-        $.html(assetsView.render().el);
+        $('.home-list').html(assetsView.render().el);
       },
 
       log: function(lid) {
