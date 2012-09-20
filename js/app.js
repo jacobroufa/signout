@@ -68,7 +68,7 @@ App = (function($) {
 
     // individual asset view
     var AssetsView = Backbone.View.extend({
-      el: '.home-list',
+      el: $('.home-list'),
       tagName: 'li',
       template: _.template($('#asset-template').html()),
 
@@ -85,9 +85,9 @@ App = (function($) {
         this.collection.deferred.done(function() {
           self.collection.each(function(asset){
             console.log("assets");
-            console.log(self.$el);
-            this.$el.html(
-              this.template(asset.attributes)
+            console.log(asset.toJSON());
+            $(self.el).html(
+              self.template(asset.toJSON())
             );
           }, self);
         });
@@ -119,7 +119,7 @@ App = (function($) {
         $('#container').empty();
         $('#container').html(homeView.render());
         // print the asset list
-        $('.home-list').html(assetsView.render().el);
+        $('.home-list').html(assetsView.render());
       },
 
       log: function(lid) {
