@@ -118,7 +118,7 @@ App = (function($) {
         $('#container').empty();
         $('#container').html(homeView.render());
         // print the asset list
-        $('.home-list').html(assetsView.render());
+        $('.home-list').html(assetsView.render().el);
       },
 
       log: function(lid) {
