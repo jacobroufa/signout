@@ -85,10 +85,11 @@ App = (function($) {
         this.collection.deferred.done(function() {
           self.collection.each(function(asset){
             console.log("assets");
-            $(this.el).html(
-              self.template(asset.toJSON())
+            console.log(self.$el);
+            this.$el.html(
+              this.template(asset.attributes)
             );
-          }, this);
+          }, self);
         });
         return this;
       },
