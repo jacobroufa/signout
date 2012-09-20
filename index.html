@@ -23,14 +23,16 @@
   <script type="text/template" id="page-template">
     <h1><%= title %></h1>
     <div class="message"></div>
-    <ul class="<%= type %>-list"></ul>
+    <div class="<%= type %>-list"></div>
   </script>
 
   <script type="text/template" id="asset-template">
-    <span class="tag"><%= id %></span>&nbsp;-&nbsp;
-    <span class="desc"><%= desc %></span>
-    <div class="asset-signer"></div>
-    <button class="control return">Return</button>
+    <li>
+      <span class="tag"><%= id %></span>&nbsp;-&nbsp;
+      <span class="desc"><%= desc %></span>
+      <div class="asset-signer"></div>
+      <button class="control return">Return</button>
+    </li>
   </script>
 
   <script type="text/template" id="log-template">

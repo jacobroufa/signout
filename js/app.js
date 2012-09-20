@@ -68,8 +68,8 @@ App = (function($) {
 
     // individual asset view
     var AssetsView = Backbone.View.extend({
-      el: $('.home-list'),
-      tagName: 'li',
+      // el: $('.home-list'),
+      tagName: 'ul',
       template: _.template($('#asset-template').html()),
 
       initialize: function() {
@@ -83,9 +83,11 @@ App = (function($) {
         console.log(self.collection);
 
         this.collection.deferred.done(function() {
+          self.$el.empty();
           self.collection.each(function(asset){
-            console.log("assets" + asset.toJSON().desc);
-            $(self.el).html(
+            console.log("assets " + asset.toJSON().tag);
+            // debugger;
+            self.$el.append(
               self.template(asset.toJSON())
             );
           }, self);
