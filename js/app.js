@@ -23,7 +23,7 @@ App = (function($) {
       state: ""
     },
     initialize: function() {
-      console.log("initializing " + this.get("desc"));
+      console.log('initializing asset model');
     },
   });
 
@@ -36,19 +36,10 @@ App = (function($) {
     url: 'api/assets',
     model: Asset,
     initialize: function() {
-      console.log("initializing assets collection");
+      console.log('initializing assets collection');
+      this.deferred = this.fetch();
     },
   });
-
-  var assets = new Assets();
-  assets.fetch();
-  /* assets.fetch({
-    success: function() {
-      _.each(assets.models, function(asset){
-        console.log( asset.get("tag") );
-      }, this);
-    }
-  }); */
 
   // wrap views and router in doc.ready
   $(document).ready(function () {
@@ -87,18 +78,24 @@ App = (function($) {
       },
 
       render: function() {
+        var self = this;
         console.log('rendering assets view list');
-        console.log(this.collection);
-        _.each(this.collection.each, function(asset){
-          $(this.el).html(
-            this.template(asset.toJSON())
-          );
-          console.log(asset);
-        }, this);
+        console.log(self.collection);
+
+        this.collection.deferred.done(function() {
+          self.collection.each(function(asset){
+            console.log("assets");
+            $(this.el).html(
+              self.template(asset.toJSON())
+            );
+          }, this);
+        });
         return this;
       },
     });
 
+    var assets = new Assets();
+    
     var assetsView = new AssetsView({
       collection: assets,
     });
