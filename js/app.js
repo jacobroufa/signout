@@ -84,8 +84,7 @@ App = (function($) {
 
         this.collection.deferred.done(function() {
           self.collection.each(function(asset){
-            console.log("assets");
-            console.log(asset.toJSON());
+            console.log("assets" + asset.toJSON().desc);
             $(self.el).html(
               self.template(asset.toJSON())
             );
