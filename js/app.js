@@ -60,8 +60,7 @@ App = (function($) {
 
       initialize: function() {
         console.log('initializing page view');
-        _.bindAll(this, 'render');
-        this.model.bind('change', this.render);
+        this.model.on('change', this.render, this);
       },
 
       render: function() {
@@ -84,13 +83,13 @@ App = (function($) {
 
       initialize: function() {
         console.log('initializing assets view list');
-        _.bindAll(this, 'render');
-        this.model.bind('change', this.render);
+        this.collection.on('change', this.render, this);
       },
 
       render: function() {
         console.log('rendering assets view list');
-        _.each(this.models, function(asset){
+        console.log(this.collection);
+        _.each(this.collection.models, function(asset){
           $(this.el).html(
             this.template(asset.toJSON())
           );
@@ -101,7 +100,7 @@ App = (function($) {
     });
 
     var assetsView = new AssetsView({
-      model: assets,
+      collection: assets,
     });
 
     // build router here
