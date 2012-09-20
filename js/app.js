@@ -89,7 +89,7 @@ App = (function($) {
       render: function() {
         console.log('rendering assets view list');
         console.log(this.collection);
-        _.each(this.collection.models, function(asset){
+        _.each(this.collection.each, function(asset){
           $(this.el).html(
             this.template(asset.toJSON())
           );
