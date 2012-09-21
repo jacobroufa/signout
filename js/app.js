@@ -12,10 +12,14 @@ App = (function($) {
   var homePage = new Page({
     title: 'Equipment Signout',
     type: 'home',
-    page: 'To sign out some equipment, just sign your name and click "Sign Out". If you are returning an item, click "Return It!" If the item is unavailable, you won\'t be able to sign your name.'
+    page: 'To sign out some equipment, just sign your name and click "Sign Out". If you are returning an item, click "Return It!" If the item is unavailable, you won\'t be able to sign your name. To view the log for any asset, click the log button next to the item\'s name.'
   });
-  var logPage = new Page({ title: 'Log for ', type: 'log' });
-  var assetPage = new Page({ title: 'Assets Management', type: 'asset' });
+  var logPage = new Page({});
+  var assetPage = new Page({
+    title: 'Assets Management',
+    type: 'asset',
+    page: 'Add an asset here, or edit existing assets.'
+  });
 
   // asset model
   var Asset = Backbone.Model.extend({
@@ -28,6 +32,11 @@ App = (function($) {
     },
     initialize: function() {
       console.log('initializing asset model');
+    },
+    sign: function() {
+      this.save({
+        state: !this.get('state')
+      });
     },
   });
 
@@ -66,9 +75,9 @@ App = (function($) {
       }
     });
 
-    var homeView = new PageView({ model: homePage });
-    var logView = new PageView({ model: logPage });
-    var assetView = new PageView({ model: assetPage });
+    var homePageView = new PageView({ model: homePage });
+    var singlePageView = new PageView({ model: logPage });
+    var assetPageView = new PageView({ model: assetPage });
 
     // individual asset view
     var AssetsView = Backbone.View.extend({
@@ -84,13 +93,10 @@ App = (function($) {
       render: function() {
         var self = this;
         console.log('rendering assets view list');
-        console.log(self.collection);
 
         this.collection.deferred.done(function() {
           self.$el.empty();
           self.collection.each(function(asset){
-            console.log("assets " + asset.toJSON().tag);
-            // debugger;
             self.$el.append(
               self.template(asset.toJSON())
             );
@@ -131,7 +137,7 @@ App = (function($) {
       home: function() {
         // print the wrapper
         $('body').empty();
-        $('body').html(homeView.render());
+        $('body').html(homePageView.render());
         // print the asset list
         $('#home-list').html(assetsView.render().el);
       },
@@ -139,13 +145,13 @@ App = (function($) {
       asset: function(id) {
         // build log page
         $('#container').empty();
-        $('#container').html(singleView.render().el);
+        $('#container').html(singlePageView.render().el);
       },
 
       assets: function() {
         // build assets page
         $('#container').empty();
-        $('#container').html(assetView.render().el);
+        $('#container').html(assetPageView.render().el);
       },
 
     });
