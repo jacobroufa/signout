@@ -9,7 +9,11 @@ App = (function($) {
     }
   });
 
-  var homePage = new Page({ title: 'Equipment Signout', type: 'home' });
+  var homePage = new Page({
+    title: 'Equipment Signout',
+    type: 'home',
+    page: 'To sign out some equipment, just sign your name and click "Sign Out". If you are returning an item, click "Return It!" If the item is unavailable, you won\'t be able to sign your name.'
+  });
   var logPage = new Page({ title: 'Log for ', type: 'log' });
   var assetPage = new Page({ title: 'Assets Management', type: 'asset' });
 
@@ -46,7 +50,7 @@ App = (function($) {
 
     // page wrapper views
     var PageView = Backbone.View.extend({
-      el: '#container',
+      el: 'body',
       template: _.template($('#page-template').html()),
 
       initialize: function() {
@@ -68,8 +72,8 @@ App = (function($) {
 
     // individual asset view
     var AssetsView = Backbone.View.extend({
-      // el: $('.home-list'),
       tagName: 'ul',
+      className: 'unstyled',
       template: _.template($('#asset-template').html()),
 
       initialize: function() {
@@ -102,11 +106,20 @@ App = (function($) {
       collection: assets,
     });
 
+    // sign in-out view
+    var SignerView = Backbone.View.extend({
+      tagName: 'div',
+      className: 'input-append',
+      template: _.template($('#signer-template').html()),
+
+      // remember to return '.uneditable-input' when state is signed-out
+    });
+
     // build router here
     NewsroomSignout = Backbone.Router.extend({
       routes: {
         '': 'home',
-        'log/:lid': 'log',
+        'asset/:id': 'asset',
         'assets': 'assets'
       },
 
@@ -117,16 +130,16 @@ App = (function($) {
 
       home: function() {
         // print the wrapper
-        $('#container').empty();
-        $('#container').html(homeView.render());
+        $('body').empty();
+        $('body').html(homeView.render());
         // print the asset list
-        $('.home-list').html(assetsView.render().el);
+        $('#home-list').html(assetsView.render().el);
       },
 
-      log: function(lid) {
+      asset: function(id) {
         // build log page
         $('#container').empty();
-        $('#container').html(logView.render().el);
+        $('#container').html(singleView.render().el);
       },
 
       assets: function() {
