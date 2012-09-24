@@ -44,9 +44,11 @@
     <li>
       <dl class="dl-horizontal"><dt class="tag"><%= tag %></dt>
       <dd>
-        <span class="desc"><%= desc %></span>
+        <span class="desc"><%= description %></span>
         <div class="asset-signer"></div>
-        <button type="submit" class="btn btn-primary">Return It!</button>
+        <% if ( state == 1 ) { %>
+          <button type="submit" class="btn btn-primary" id="return-btn">Return It!</button>
+        <% } %>
       </dd></dl>
     </li>
   </script>
@@ -62,14 +64,11 @@
   </script>
 
   <script type="text/template" id="out-template">
-    <div class="alert alert-info"><%= user %> has signed out <%= tag %> at <%= out %>.</div>
+    <div class="alert alert-info"><%= user %> has signed out <%= tag %> at <%= signout %>.</div>
   </script>
 
   <script type="text/template" id="in-template">
-    <div class="alert alert-info"><%= user %> has signed in <%= tag %> at <%= in %>.</div>
-  </script>
-
-  <script type="text/template" id="">
+    <div class="alert alert-info"><%= user %> has signed in <%= tag %> at <%= signin %>.</div>
   </script>
 </head>
 <body>

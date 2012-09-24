@@ -27,7 +27,7 @@ App = (function($) {
     defaults: {
       id: "",
       tag: "",
-      desc: "",
+      description: "",
       state: ""
     },
     initialize: function() {
@@ -41,7 +41,16 @@ App = (function($) {
   });
 
   // log model
-  var Log = Backbone.Model.extend({});
+  var Log = Backbone.Model.extend({
+    urlRoot: 'api/logs',
+    defaults: {
+      id: "",
+      aid: "",
+      user: "",
+      signin: "",
+      signout: "",
+    },
+  });
 
   // collections
   
@@ -50,6 +59,14 @@ App = (function($) {
     model: Asset,
     initialize: function() {
       console.log('initializing assets collection');
+      this.deferred = this.fetch();
+    },
+  });
+
+  var Logs = Backbone.Collection.extend({
+    url: 'api/logs',
+    model: Log,
+    initialize: function() {
       this.deferred = this.fetch();
     },
   });
@@ -83,14 +100,14 @@ App = (function($) {
     var AssetsView = Backbone.View.extend({
       tagName: 'ul',
       className: 'unstyled',
-      template: _.template($('#asset-template').html()),
+      homeTemplate: _.template($('#asset-template').html()),
 
       initialize: function() {
         console.log('initializing assets view list');
         this.collection.on('change', this.render, this);
       },
 
-      render: function() {
+      homeRender: function() {
         var self = this;
         console.log('rendering assets view list');
 
@@ -98,8 +115,13 @@ App = (function($) {
           self.$el.empty();
           self.collection.each(function(asset){
             self.$el.append(
-              self.template(asset.toJSON())
+              self.homeTemplate(asset.toJSON())
             );
+
+            var aid = asset.get('id');
+            var astate = asset.get('state');
+            console.log(aid + ' ' + astate);
+            // $('.asset-signer').html(signerView.render(aid, astate).el);
           }, self);
         });
         return this;
@@ -119,6 +141,20 @@ App = (function($) {
       template: _.template($('#signer-template').html()),
 
       // remember to return '.uneditable-input' when state is signed-out
+      render: function(aid, astate) {
+        var self = this;
+        console.log('rendering signer view');
+
+        this.collection.deferred.done(function() {
+          self.$el.empty();
+          // if aid == model.get(aid)
+        });
+      },
+    });
+
+    var logs = new Logs();
+    var signerView = new SignerView({
+      collection: logs,
     });
 
     // build router here
@@ -139,7 +175,7 @@ App = (function($) {
         $('body').empty();
         $('body').html(homePageView.render());
         // print the asset list
-        $('#home-list').html(assetsView.render().el);
+        $('#home-list').html(assetsView.homeRender().el);
       },
 
       asset: function(id) {
